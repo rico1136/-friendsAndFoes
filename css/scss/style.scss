@@ -1,7 +1,154 @@
-body{
-  color: black;
-  background-color: blue;
-  p{
-    color: red;
+$primary : rgb(36, 123, 160);
+$secondary : rgb(112, 193, 179);
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+// Header
+.header{
+  width: 100vw;
+  form:first-of-type {
+    background-color: white;
+    opacity: 0;
+    z-index: 2;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 40vw;
+
+    label {
+    }
+  }
+
+  &__inner {
+    z-index: 1;
+    position: relative;
+    width: 100vw;
+    height: 20em;
+    img {
+      z-index: 0;
+      width: inherit;
+      height: 15em;
+      opacity: 0.8;
+    }
+
+    img:first-child {
+      z-index: 1;
+      position: absolute;
+      left: 1em;
+      top: 1em;
+      width: auto;
+      height: 2em;
+      opacity: 1;
+    }
+    &_profile{
+      height: 2em!important;
+      width: auto !important;
+      z-index: 1!important;
+      position: absolute;
+      right: 1em;
+      top: 1em;
+      opacity: 1!important;
+    }
+    &_text {
+      width: 80vw;
+      display: flex;
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      h1 {
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      h2 {
+        display: block;
+        color: #888888;
+      }
+    }
+
   }
 }
+
+// HOMEPAGE
+// --------------------------
+.homepage {
+  width: 100vw;
+
+  &__formForMatches {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    input[type='submit']{
+      background-color: white;
+    }
+    &_inner {
+    display: flex;
+    justify-content: space-around;
+    width: 100vw;
+
+    input[type='radio'] {
+      display: none;
+
+      &:checked + label {
+        background-color: #bbb;
+      }
+    }
+
+    label {
+      margin: 1em;
+      padding-top: 5px;
+      padding-right: 40px;
+      padding-left: 40px;
+      padding-bottom: 5px;
+      display: block;
+      background-color: white;
+      border: 0.5px solid black;
+      border-radius: 10px;
+      font-size: 1em;
+      width: auto;
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+}
+  &__specials{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    div{
+      text-align: center;
+    }
+  }
+}
+
+// GENRES
+// ------------------
+
+.genreOverview{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+    &__block{
+      margin-bottom: 2em;
+      width: 40vw;
+      height: 100%;
+      img{
+        width: 100%;
+      }
+    }
+  }

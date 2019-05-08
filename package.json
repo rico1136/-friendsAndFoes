@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "node-sass --watch css/scss -o css, "
+    "scss": "node-sass --watch css/scss -o css"
   },
   "author": "Rico Zethof",
   "license": "MIT",
