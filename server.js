@@ -3,8 +3,7 @@ const arrayFind = require('array-find');
 const slug = require('slug');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const getAge = require('get-age')
-
+const getAge = require('get-age');
 
 let data = [
     {

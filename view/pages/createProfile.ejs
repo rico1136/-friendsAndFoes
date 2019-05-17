@@ -1,33 +1,30 @@
 <% include ../head.ejs %>
-<div class="profile">
-    <main class="profilePicture" style="background-image: url(<%= profilePicture %>)">
+<main class="profile">
+    <div class="profilePicture" style="background-image: url(<%= profilePicture %>)">
         <!--<form action="/register" method="post" enctype="multipart/form-data">-->
         <!--<input type="file" name="profilePicture" accept="image/*">-->
         <!--<input type="submit" value="add picture">-->
         <!--</form>-->
-    </main>
+    </div>
     <div class="profileName">
-        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-             viewBox="-672 1013.5 190.2 23.5" style="enable-background:new -672 1013.5 190.2 23.5;" xml:space="preserve">
-<style type="text/css">
-    .st0{fill:url(#SVGID_1_);}
-</style>
-            <title>Asset 2</title>
-            <g id="Layer_2">
-                <g id="Layer_2-2">
-                    <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-576.9" y1="1013.45" x2="-576.9" y2="1037">
-                        <stop  offset="0" style="stop-color:#26262B;stop-opacity:0.25"/>
-                        <stop  offset="0" style="stop-color:#26262B;stop-opacity:0.25"/>
-                        <stop  offset="0.57" style="stop-color:#26262B;stop-opacity:0.8"/>
-                        <stop  offset="0.92" style="stop-color:#26262B"/>
-                    </linearGradient>
-                    <path class="st0" d="M-481.8,1027.8v9.2H-672v-9.2c20.1,0,27.1-14.4,55-14.4s34.8,14.4,56.5,14.4c14.2,0,19.1-14.4,38.8-14.4
-			S-497.1,1027.8-481.8,1027.8z"/>
-                </g>
-            </g>
-</svg>
+        <img src="../assets/images/BlackWave.png" alt="">
         <h1><%= name %>, <%= age %></h1>
     </div>
-</div>
+    <div class="profileContent">
+        <form action="/matches">
+            <label for="bio">Bio:</label>
+            <textarea name="bio" id="bio" cols="30" rows="5"></textarea>
+
+            <label for="gender">I am looking for a:</label>
+            <select id="gender" name="gender" required>
+                <option value="gamer">Gamer (Other)</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+
+        </form>
+    </div>
+</main>
 
 <% include ../footer.ejs %>

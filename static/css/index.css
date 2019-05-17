@@ -123,18 +123,18 @@ main{
 }
 .profilePicture{
     width: 100vw;
-    height: 25vh;
+    height: 30vh;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 .profileName{
     position: relative;
-    height: 5em;
+    height: 3em;
     width: 100vw;
-    margin-top: -3.5em;
+    margin-top: -2.5em;
 }
-.profileName svg{
+.profileName img{
     height: 100%;
     width: 100%;
 }
