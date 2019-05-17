@@ -41,7 +41,7 @@ function genres(req, res) {
 }
 
 function home(req, res) {
-    res.render('home.ejs', {data: data});
+    res.render('pages/home.ejs', {data: data});
 }
 
 function movie(req, res, next) {
