@@ -22,6 +22,11 @@ h2{
 
 body{
     background-color: #26262b;
+    min-height: 80vh;
+}
+
+main{
+    min-height: 70vh;
 }
 
 .button{
@@ -87,12 +92,20 @@ body{
     color: rgba(255, 255, 255, 0.6);
 }
 .form form input{
-    font-size: 1.3em;
+     font-size: 1.3em;
+     border-radius: 5px;
+     width: 70vw;
+    margin: auto auto 1em;
+}
+
+.form form select{
+    font-size: 1em;
+    padding: .3em;
     border-radius: 5px;
     width: 70vw;
-    margin: auto;
-    margin-bottom: 1em;
+    margin: auto auto 1em;
 }
+
 
 .form form input[type='submit']{
     margin-top: 1em;
@@ -104,8 +117,39 @@ body{
     border: none !important;
 }
 
+/* Profile */
+.profile{
+    height: 80vh;
+}
+.profilePicture{
+    width: 100vw;
+    height: 25vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.profileName{
+    position: relative;
+    height: 5em;
+    width: 100vw;
+    margin-top: -3.5em;
+}
+.profileName svg{
+    height: 100%;
+    width: 100%;
+}
+.profileName h1{
+    display: block;
+    width: 100vw;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    margin: auto;
+}
+
 /* Header */
 header{
+    min-height: 10vh;
     width: 100vw;
     display: flex;
     justify-content: space-between;
@@ -132,8 +176,10 @@ header a:last-of-type:hover{
 
 /* Footer */
 footer{
+    min-height: 20vh;
     width: 100vw;
-    position: absolute;
+    position: relative;
+    z-index: 99;
     bottom: 0;
     left: 0;
 }

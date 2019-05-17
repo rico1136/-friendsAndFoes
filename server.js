@@ -3,6 +3,8 @@ const arrayFind = require('array-find');
 const slug = require('slug');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const getAge = require('get-age')
+
 
 let data = [
     {
@@ -45,14 +47,20 @@ function register(req, res) {
     res.render('pages/register.ejs', {title: 'Register'});
 }
 function profile(req, res) {
-    res.render('pages/profile.ejs', {title: 'Profile'});
+    res.render('pages/createProfile.ejs', {title: 'Profile'});
 }
 
 function addUser(req, res) {
-    console.log('yeet');
     const name = req.body.name;
+    const age = getAge(req.body.age);
+    let profilePicture;
+    if (req.body.profilePicture){
+        profilePicture = req.body.profilePicture;
+    }else{
+        profilePicture = '../assets/images/profile.jpg';
+    }
 
-    res.render('pages/profile.ejs', {title: `Profile of ${name}`, name: name});
+    res.render('pages/createProfile.ejs', {title: `Profile of ${name}`, name: name, age: age, profilePicture : profilePicture});
 }
 
 function movie(req, res, next) {
