@@ -51,7 +51,7 @@ function profile(req, res) {
 }
 
 function addUser(req, res) {
-    const name = req.body.name;
+    const name = req.body.na
     const age = getAge(req.body.age);
     let profilePicture;
     if (req.body.profilePicture){
