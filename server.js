@@ -6,19 +6,12 @@ const multer = require('multer');
 
 let data = [
     {
-        id: 'RPG',
-        title: 'RPG',
+        id: '1',
+        title: '',
         description: 'Role players',
         members:'200',
         cover:'',
     },
-    {
-        id: 'MOBA',
-        title: 'MOBA',
-        description: 'Fight each other with the help of some minions',
-        members:'123',
-        cover:'',
-    }
 ];
 let upload = multer({dest: 'static/upload/'})
 
@@ -28,8 +21,10 @@ express()
     .set('view engine', 'ejs')
     .set('views', 'view')
     .get('/', home)
-    .get('/genres', genres)
-    .post('/', upload.single('cover'), add)
+    .get('/login', login)
+    .get('/register', register)
+    .post('/register', addUser)
+    .get('/profile', profile)
     .get('/add', form)
     .get('/:id', movie)
     .delete('/:id', remove)
@@ -41,7 +36,23 @@ function genres(req, res) {
 }
 
 function home(req, res) {
-    res.render('pages/home.ejs', {data: data});
+    res.render('pages/home.ejs', {title: 'Home'});
+}
+function login(req, res) {
+    res.render('pages/login.ejs', {title: 'Login'});
+}
+function register(req, res) {
+    res.render('pages/register.ejs', {title: 'Register'});
+}
+function profile(req, res) {
+    res.render('pages/profile.ejs', {title: 'Profile'});
+}
+
+function addUser(req, res) {
+    console.log('yeet');
+    const name = req.body.name;
+
+    res.render('pages/profile.ejs', {title: `Profile of ${name}`, name: name});
 }
 
 function movie(req, res, next) {
@@ -80,5 +91,5 @@ function remove(req, res){
 }
 
 function notFound(req, res) {
-    res.status(404).render('not-found.ejs');
+    res.status(404).render('not-found.ejs', {title: 'Not-Found'}) ;
 }
