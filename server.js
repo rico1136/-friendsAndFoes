@@ -2,10 +2,10 @@ const express = require('express');
 const arrayFind = require('array-find');
 const slug = require('slug');
 const bodyParser = require('body-parser');
-const multer = require('multer');
 const getAge = require('get-age');
+const multer = require('multer');
 
-let loggedIn = false;
+const upload = multer({dest: 'static/upload/'});
 
 let profiles = [
     {
@@ -14,7 +14,7 @@ let profiles = [
         password: '123',
         name: 'Rico Zethof',
         gender: 'male',
-        age: '16/09/1996',
+        age: '16/09/2000',
         profile: {
             profileImg: 'upload/profile.jpg',
             bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum, ex ut eleifend porta, mauris mi faucibus quam, vel tristique ipsum nisi nec elit. Etiam sed commodo ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere tristique porttitor.',
@@ -36,7 +36,6 @@ let profiles = [
         }
     },
 ];
-let upload = multer({dest: 'static/upload/'})
 
 express()
     .use(express.static('static'))
@@ -46,18 +45,11 @@ express()
     .get('/', home)
     .get('/login', login)
     .get('/register', register)
-    .post('/register', addUser)
-    .get('/createProfile', createProfile)
-    .post('/createProfile', addProfile)
-    .get('/profile', profile)
+    .post('/register', upload.single('profilePicture'), addUser)
+    .get(`/:id`, profile)
     .get('/findMatches', findMatches)
-    .delete('/:id', remove)
     .use(notFound)
     .listen(8000);
-
-function genres(req, res) {
-    res.render('list.ejs', {data: data});
-}
 
 function home(req, res) {
     res.render('pages/home.ejs', {title: 'Home'});
@@ -71,13 +63,14 @@ function register(req, res) {
 function createProfile(req, res) {
     let id = (profiles.slice(-1));
     id = id[0].id;
-    console.log(id);
 }
 function addProfile(req, res) {
     res.redirect('/profile');
 }
 function profile(req, res) {
-    res.render('pages/profile.ejs', {title: `Profile of `});
+    let obj;
+    obj = profiles.find(obj => obj.id == req.params.id);
+    res.render('pages/profile.ejs', {title: `Profile of ${obj.name}`,obj : obj});
 }
 function findMatches(req, res) {
     res.render('pages/findMatches.ejs', {title: `Find your matches`});
@@ -87,41 +80,22 @@ function findMatches(req, res) {
 function addUser(req, res) {
     let id = (profiles.slice(-1));
     id = id[0].id + 1;
-    const email = req.body.email;
-    const password = req.body.password;
-    const name = req.body.name;
-    const gender = req.body.gender;
-    const age = req.body.age;
 
     profiles.push({
         id: id,
-        email: email,
-        password: password,
-        name: name,
-        gender: gender,
-        age: age,
+        email: req.body.email,
+        password: req.body.password,
+        name: req.body.name,
+        gender: req.body.gender,
+        age: req.body.age,
+        profile: {
+            profileImg: req.file ? req.file.filename : null,
+            bio: req.body.bio,
+            wantGender: req.body.wantGender,
+            favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
+        }
     });
-    res.render('pages/createProfile.ejs', {title: `Profile of ${id}`});
-}
-function add(req,res) {
-    const id = slug(req.body.title).toLowerCase();
-
-    data.push({
-        id: id,
-        title: req.body.title,
-        description: req.body.description,
-        members: req.body.members,
-        cover: req.file.filename,
-    });
-
-    res.redirect('/' + id)
-}
-
-function remove(req, res){
-    const id = req.params.id;
-
-    data = data.filter((value) => value.id !== id)
-    res.json({status:'ok'})
+    res.redirect(`/${id}`);
 }
 
 function notFound(req, res) {

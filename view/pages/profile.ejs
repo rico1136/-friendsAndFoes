@@ -1,23 +1,23 @@
 <% include ../head.ejs %>
 <main class="profile">
-    <div class="profilePicture" style="background-image: url('assets/images/profile.jpg')">
+    <div class="profilePicture" style="background-image: url('upload/<%= obj.profile.profileImg%>')">
         <!--<form action="/register" method="post" enctype="multipart/form-data">-->
         <!--<input type="file" name="profilePicture" accept="image/*">-->
         <!--<input type="submit" value="add picture">-->
         <!--</form>-->
     </div>
     <div class="profileName">
-        <img src="assets/images/BlackWave.png" alt="">
-        <h1>Anne, 22</h1>
+        <img src="" alt="">
+        <h1><%= obj.name %>, <%= obj.age %></h1>
     </div>
     <div class="profileContent">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum, ex ut eleifend porta, mauris mi faucibus quam, vel tristique ipsum nisi nec elit. Etiam sed commodo ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere tristique porttitor.</p>
-        <p>Searching for: Male</p>
+<p><%= obj.profile.bio %></p>
+        <p><%= obj.profile.wantGender %></p>
         <p>Favorite games</p>
         <ul>
-            <li>Red dead redemtion 2</li>
-            <li>Red dead redemtion 2</li>
-            <li>Red dead redemtion 2</li>
+            <li><%= obj.profile.favoriteGames[0] %></li>
+            <li><%= obj.profile.favoriteGames[1] %></li>
+            <li><%= obj.profile.favoriteGames[2] %></li>
         </ul>
 
         <!--if profile id is same as logged in id dont show-->
