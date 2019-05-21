@@ -5,13 +5,35 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const getAge = require('get-age');
 
-let data = [
+let loggedIn = false;
+
+let profiles = [
     {
-        id: '1',
-        title: '',
-        description: 'Role players',
-        members:'200',
-        cover:'',
+        id: 1,
+        email: 'ricozethof@gmail.com',
+        password: '123',
+        name: 'Rico Zethof',
+        gender: 'male',
+        age: '16/09/1996',
+        profile: {
+            profileImg: 'upload/profile.jpg',
+            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum, ex ut eleifend porta, mauris mi faucibus quam, vel tristique ipsum nisi nec elit. Etiam sed commodo ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere tristique porttitor.',
+            wantGender: 'female',
+            favoriteGames: ['biem','yeet','blam'],
+        }
+    },
+    {
+        id: 2,
+        email: 'test@gmail.com',
+        password: '123',
+        name: '',
+        gender: '',
+        age: '',
+        profile: {
+            bio: '',
+            wantGender: '',
+            favoriteGames: ['','',''],
+        }
     },
 ];
 let upload = multer({dest: 'static/upload/'})
@@ -25,9 +47,10 @@ express()
     .get('/login', login)
     .get('/register', register)
     .post('/register', addUser)
+    .get('/createProfile', createProfile)
+    .post('/createProfile', addProfile)
     .get('/profile', profile)
-    .get('/add', form)
-    .get('/:id', movie)
+    .get('/findMatches', findMatches)
     .delete('/:id', remove)
     .use(notFound)
     .listen(8000);
@@ -45,37 +68,41 @@ function login(req, res) {
 function register(req, res) {
     res.render('pages/register.ejs', {title: 'Register'});
 }
-function profile(req, res) {
-    res.render('pages/createProfile.ejs', {title: 'Profile'});
+function createProfile(req, res) {
+    let id = (profiles.slice(-1));
+    id = id[0].id;
+    console.log(id);
 }
+function addProfile(req, res) {
+    res.redirect('/profile');
+}
+function profile(req, res) {
+    res.render('pages/profile.ejs', {title: `Profile of `});
+}
+function findMatches(req, res) {
+    res.render('pages/findMatches.ejs', {title: `Find your matches`});
+}
+
 
 function addUser(req, res) {
-    const name = req.body.na
-    const age = getAge(req.body.age);
-    let profilePicture;
-    if (req.body.profilePicture){
-        profilePicture = req.body.profilePicture;
-    }else{
-        profilePicture = '../assets/images/profile.jpg';
-    }
+    let id = (profiles.slice(-1));
+    id = id[0].id + 1;
+    const email = req.body.email;
+    const password = req.body.password;
+    const name = req.body.name;
+    const gender = req.body.gender;
+    const age = req.body.age;
 
-    res.render('pages/createProfile.ejs', {title: `Profile of ${name}`, name: name, age: age, profilePicture : profilePicture});
+    profiles.push({
+        id: id,
+        email: email,
+        password: password,
+        name: name,
+        gender: gender,
+        age: age,
+    });
+    res.render('pages/createProfile.ejs', {title: `Profile of ${id}`});
 }
-
-function movie(req, res, next) {
-    const id = req.params.id;
-    let movie = arrayFind(data, (value) => value.id === id);
-    if(!movie){
-        next();
-        return
-    }
-    res.render('detail.ejs', {data: movie});
-}
-
-function form(req, res) {
-    res.render('addMovie.ejs')
-}
-
 function add(req,res) {
     const id = slug(req.body.title).toLowerCase();
 

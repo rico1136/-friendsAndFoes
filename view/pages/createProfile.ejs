@@ -1,17 +1,17 @@
 <% include ../head.ejs %>
-<main class="profile">
-    <div class="profilePicture" style="background-image: url(<%= profilePicture %>)">
+<main class="createProfile">
+    <div class="profilePicture" style="background-image: url('assets/images/profile.jpg')">
         <!--<form action="/register" method="post" enctype="multipart/form-data">-->
         <!--<input type="file" name="profilePicture" accept="image/*">-->
         <!--<input type="submit" value="add picture">-->
         <!--</form>-->
     </div>
     <div class="profileName">
-        <img src="../assets/images/BlackWave.png" alt="">
-        <h1><%= name %>, <%= age %></h1>
+        <img src="assets/images/BlackWave.png" alt="">
+        <h1>name, age</h1>
     </div>
     <div class="profileContent">
-        <form action="/matches">
+        <form method="post">
             <label for="bio">Bio:</label>
             <textarea name="bio" id="bio" cols="30" rows="5"></textarea>
 
@@ -22,9 +22,13 @@
                 <option value="female">Female</option>
             </select>
 
-
+            <label for="games">Favorite games</label>
+            <select id="games" name="games" required>
+                <option>Red dead redemtion 2</option>
+                <option>League of legends</option>
+                <option>rocket league</option>
+            </select>
+            <input type="submit">
         </form>
     </div>
 </main>
-
-<% include ../footer.ejs %>
