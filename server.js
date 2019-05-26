@@ -16,10 +16,10 @@ let profiles = [
         gender: 'male',
         age: '16/09/2000',
         profile: {
-            profileImg: 'upload/profile.jpg',
+            profileImg: '/assets/images/profile.jpg',
             bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum, ex ut eleifend porta, mauris mi faucibus quam, vel tristique ipsum nisi nec elit. Etiam sed commodo ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere tristique porttitor.',
-            wantGender: 'female',
-            favoriteGames: ['biem','yeet','blam'],
+            wantGender: 'Female',
+            favoriteGames: ['Rocket league','Red dead Redemption','League of Legends'],
         }
     },
     {

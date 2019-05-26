@@ -1,29 +1,34 @@
 <% include ../head.ejs %>
 <main class="profile">
-    <div class="profilePicture" style="background-image: url('upload/<%= obj.profile.profileImg%>')">
-        <!--<form action="/register" method="post" enctype="multipart/form-data">-->
-        <!--<input type="file" name="profilePicture" accept="image/*">-->
-        <!--<input type="submit" value="add picture">-->
-        <!--</form>-->
+    <div class="profilePicture" style="background-image: url('<%= obj.profile.profileImg%>')">
+        <div class="profilePictureGradient"></div>
     </div>
     <div class="profileName">
-        <img src="" alt="">
         <h1><%= obj.name %>, <%= obj.age %></h1>
     </div>
     <div class="profileContent">
-<p><%= obj.profile.bio %></p>
-        <p><%= obj.profile.wantGender %></p>
-        <p>Favorite games</p>
-        <ul>
-            <li><%= obj.profile.favoriteGames[0] %></li>
-            <li><%= obj.profile.favoriteGames[1] %></li>
-            <li><%= obj.profile.favoriteGames[2] %></li>
-        </ul>
+        <div>
+            <h2>Bio</h2>
+            <p><%= obj.profile.bio %></p>
+        </div>
+        <div>
+            <h2>Preffered gender</h2>
+            <p><%= obj.profile.wantGender %></p>
+        </div>
+        <div>
+            <h2>Favorite games</h2>
+            <ul>
+                <li><%= obj.profile.favoriteGames[0] %></li>
+                <li><%= obj.profile.favoriteGames[1] %></li>
+                <li><%= obj.profile.favoriteGames[2] %></li>
+            </ul>
+        </div>
+
 
         <!--if profile id is same as logged in id dont show-->
-        <!--<form method="post">-->
-            <!--<input class="button" type="submit" value="Send friend request">-->
-        <!--</form>-->
+        <form method="post">
+            <input class="buttonSmall" type="submit" value="Send friend request">
+        </form>
     </div>
 </main>
 

@@ -21,7 +21,7 @@ h2{
 }
 
 body{
-    background-color: #26262b;
+    background-color: rgb(38, 38, 43);
     min-height: 80vh;
 }
 
@@ -40,6 +40,22 @@ main{
     border: none;
     border-radius: 5px;
 }
+.button:hover{
+    background-color: #91a9fd;
+    color: black;
+}
+.buttonSmall{
+    text-align: center;
+    text-decoration: none;
+    font-size: 1rem;
+    color: #ffffff;
+    background-color: #43B581;
+    padding: 5px;
+    width: 10rem;
+    border: none;
+    border-radius: 5px;
+}
+
 
 /* Homepage */
 .homepage{
@@ -127,16 +143,21 @@ main{
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    position: relative;
+}
+.profilePictureGradient{
+    width: 100vw;
+    height: 5em;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(38, 38, 43, 1) 100%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 .profileName{
     position: relative;
     height: 3em;
     width: 100vw;
-    margin-top: -2.5em;
-}
-.profileName img{
-    height: 100%;
-    width: 100%;
+    margin-top: -3em;
 }
 .profileName h1{
     display: block;
@@ -146,6 +167,27 @@ main{
     top: 50%;
     margin: auto;
 }
+
+.profileContent{
+    margin-top: 1em;
+    color: white;
+}
+.profileContent div{
+    margin: 1em;
+}
+.profileContent h2{
+    margin: 0;
+    color: white;
+}
+.profileContent p, .profileContent li{
+    color: white;
+    opacity: 0.6;
+    list-style-type: none;
+}
+.profileContent form{
+    margin-left: 1em;
+}
+
 
 /* matches */
 .person{
@@ -213,9 +255,6 @@ footer{
     bottom: 0;
     left: 0;
 }
-footer svg {
-    display: none;
-}
 .footerContent{
     margin-top: 13vh;
     display: none;
@@ -240,11 +279,19 @@ footer svg {
     border: 1px solid black;
     text-align: center;
     margin-top: auto;
-    display: block;
+    display: flex;
+    align-content: center;
+    flex-direction: column;
     width: 100%;
     height: 100%;
     color: white;
     background-color: #7289da;
+}
+.footerContentMobile li svg{
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    margin: auto;
 }
 .footerContentMobile li:hover {
     background-color: #5666ac;
