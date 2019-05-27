@@ -2,11 +2,9 @@
 <main class="findMatches">
     <h1>Find your player 2</h1>
     <div>
-        <% include ../profilePreview.ejs %>
-        <% include ../profilePreview.ejs %>
-        <% include ../profilePreview.ejs %>
-        <% include ../profilePreview.ejs %>
-        <% include ../profilePreview.ejs %>
+        <% users.forEach(function(user){ %>
+            <%- include('../profilePreview', {user: user}); %>
+        <%}); %>
     </div>
 </main>
 

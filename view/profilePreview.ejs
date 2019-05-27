@@ -2,8 +2,8 @@
   <a href="">
     <img src="assets/images/profile.jpg" alt="Person image">
     <div class="personContent">
-      <h2>Name, age</h2>
-      <p>Favorite game: League of legends</p>
+      <h2><%= user.name%>, <%= user.age %></h2>
+      <p>Favorite game: <%= user.profile.favoriteGames[0]%></p>
     </div>
   </a>
 </article>

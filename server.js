@@ -1,45 +1,37 @@
 const express = require('express');
 const arrayFind = require('array-find');
-const slug = require('slug');
 const bodyParser = require('body-parser');
 const getAge = require('get-age');
 const multer = require('multer');
+const mongo = require('mongodb');
+const session = require('express-session');
+
+// initialize db
+require('dotenv').config();
+
+var db = null;
+var url = 'mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
+
+mongo.MongoClient.connect(url, function (err, client) {
+    if (err) throw err
+    db = client.db(process.env.DB_NAME)
+});
+
 
 const upload = multer({dest: 'static/upload/'});
 
 let profiles = [
-    {
-        id: 1,
-        email: 'ricozethof@gmail.com',
-        password: '123',
-        name: 'Rico Zethof',
-        gender: 'male',
-        age: '16/09/2000',
-        profile: {
-            profileImg: 'upload/profile.jpg',
-            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum, ex ut eleifend porta, mauris mi faucibus quam, vel tristique ipsum nisi nec elit. Etiam sed commodo ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere tristique porttitor.',
-            wantGender: 'female',
-            favoriteGames: ['biem','yeet','blam'],
-        }
-    },
-    {
-        id: 2,
-        email: 'test@gmail.com',
-        password: '123',
-        name: '',
-        gender: '',
-        age: '',
-        profile: {
-            bio: '',
-            wantGender: '',
-            favoriteGames: ['','',''],
-        }
-    },
+
 ];
 
 express()
     .use(express.static('static'))
     .use(bodyParser.urlencoded({extended:true}))
+    .use(session({
+        resave:false,
+        saveUninitialized:true,
+        secret: process.env.SESSION_SECRET
+    }))
     .set('view engine', 'ejs')
     .set('views', 'view')
     .get('/', home)
@@ -60,42 +52,64 @@ function login(req, res) {
 function register(req, res) {
     res.render('pages/register.ejs', {title: 'Register'});
 }
-function createProfile(req, res) {
-    let id = (profiles.slice(-1));
-    id = id[0].id;
-}
-function addProfile(req, res) {
-    res.redirect('/profile');
-}
-function profile(req, res) {
-    let obj;
-    obj = profiles.find(obj => obj.id == req.params.id);
-    res.render('pages/profile.ejs', {title: `Profile of ${obj.name}`,obj : obj});
+function profile(req, res, next) {
+    db.collection('profile').find().toArray(done)
+
+    function done(err, data){
+        if (err) {
+            next(err)
+        } else {
+            let id = req.params.id;
+            let profile = arrayFind(data, function (value) {
+                return value._id == id
+            });
+            if(!profile){
+                next();
+                return
+            }
+            res.render('pages/profile.ejs', {title: `Profile of ${profile.name}`,obj : profile});
+        }
+    }
+
+
 }
 function findMatches(req, res) {
-    res.render('pages/findMatches.ejs', {title: `Find your matches`});
+    db.collection('profile').find().toArray(done)
+    function done(err, data){
+        if (err) {
+            next(err)
+        } else {
+            res.render('pages/findMatches.ejs', {title: `Find your matches`, users : data});
+        }
+    }
 }
 
 
 function addUser(req, res) {
-    let id = (profiles.slice(-1));
-    id = id[0].id + 1;
+        db.collection('profile').insertOne({
+            email: req.body.email,
+            password: req.body.password,
+            name: req.body.name,
+            gender: req.body.gender,
+            age: getAge(req.body.age),
+            profile: {
+                profileImg: req.file ? req.file.filename : null,
+                bio: req.body.bio,
+                wantGender: req.body.wantGender,
+                favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
+            }
+        }, done);
 
-    profiles.push({
-        id: id,
-        email: req.body.email,
-        password: req.body.password,
-        name: req.body.name,
-        gender: req.body.gender,
-        age: req.body.age,
-        profile: {
-            profileImg: req.file ? req.file.filename : null,
-            bio: req.body.bio,
-            wantGender: req.body.wantGender,
-            favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
+
+    function done(err, data) {
+        if (err) {
+            next(err)
+        } else {
+            res.redirect(`/${data.insertedId}`);
         }
-    });
-    res.redirect(`/${id}`);
+    }
+
+
 }
 
 function notFound(req, res) {
