@@ -20,10 +20,6 @@ mongo.MongoClient.connect(url, function (err, client) {
 
 const upload = multer({dest: 'static/upload/'});
 
-let profiles = [
-
-];
-
 express()
     .use(express.static('static'))
     .use(bodyParser.urlencoded({extended:true}))
