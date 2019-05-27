@@ -35,21 +35,21 @@
             <option value="female">Female</option>
         </select>
 
-        <label for="games1">Favorite games</label>
-        <select id="games1" name="games1" required>
-            <option value="Red dead redemtion">Red dead redemtion 2</option>
-            <option value="league of legends">League of legends</option>
-            <option value="Rocket league">rocket league</option>
+        <label for="genre1">Favorite game genres</label>
+        <select id="genre1" name="genre1" required>
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.id %>"><%= element.name %></option>
+            <%}); %>
         </select>
-        <select id="games2" name="games2" required>
-            <option value="Red dead redemtion">Red dead redemtion 2</option>
-            <option value="league of legends">League of legends</option>
-            <option value="Rocket league">rocket league</option>
+        <select id="genre2" name="genre2" required>
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.id %>"><%= element.name %></option>
+            <%}); %>
         </select>
-        <select id="games3" name="games3" required>
-            <option value="Red dead redemtion">Red dead redemtion 2</option>
-            <option value="league of legends">League of legends</option>
-            <option value="Rocket league">rocket league</option>
+        <select id="genre3" name="genre3" required>
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.id %>"><%= element.name %></option>
+            <%}); %>
         </select>
 
         <input class="button" type="submit" value="Register">

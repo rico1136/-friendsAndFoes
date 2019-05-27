@@ -69,7 +69,19 @@ function tryLogin(req, res) {
     }
 }
 function register(req, res) {
-    res.render('pages/register.ejs', {title: 'Register'});
+    const options = { method: 'POST',
+        url: 'https://api-v3.igdb.com/genres',
+        headers:
+            { 'Postman-Token': '181a8b4d-3061-41d7-a6ba-105cb9bd5d07',
+                'cache-control': 'no-cache',
+                'user-key': 'fb8821b65e913424665c33e12d06ac9a' },
+        body: 'fields name;limit 50;' };
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        let data = JSON.parse(body);
+        res.render('pages/register.ejs', {title: 'Register', options: data});
+    });
 }
 function profile(req, res, next) {
     if (!req.session.user) {
@@ -136,6 +148,7 @@ function addUser(req, res, next) {
             name: req.body.name,
             gender: req.body.gender,
             age: getAge(req.body.age),
+            favoriteGenres:[req.body.genre1, req.body.genre2, req.body.genre3],
             profile: {
                 profileImg: req.file ? req.file.filename : null,
                 bio: req.body.bio,
@@ -160,18 +173,3 @@ function addUser(req, res, next) {
 function notFound(req, res) {
     res.status(404).render('not-found.ejs', {title: 'Not-Found'}) ;
 }
-
-
-const options = { method: 'POST',
-    url: 'https://api-v3.igdb.com/games',
-    headers:
-        { 'Postman-Token': '181a8b4d-3061-41d7-a6ba-105cb9bd5d07',
-            'cache-control': 'no-cache',
-            'user-key': 'fb8821b65e913424665c33e12d06ac9a' },
-    body: 'fields name,popularity; sort popularity desc;\n' };
-
-request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-
-    console.log(body);
-});
