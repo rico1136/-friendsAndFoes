@@ -18,19 +18,21 @@
         <div>
             <h2>Favorite games</h2>
             <ul>
-                <li><%= obj.profile.favoriteGenres[0] %></li>
-                <li><%= obj.profile.favoriteGenres[1] %></li>
-                <li><%= obj.profile.favoriteGenres[2] %></li>
+                <li><%= obj.favoriteGenres[0] %></li>
+                <li><%= obj.favoriteGenres[1] %></li>
+                <li><%= obj.favoriteGenres[2] %></li>
             </ul>
         </div>
 
 
         <!--if profile id is same as logged in.-->
-        <a href="/findMatches" class="button">Start looking</a>
-        <!--if profile id is not same as logged in-->
-        <!--<form method="post">-->
-            <!--<input class="buttonSmall" type="submit" value="Send friend request">-->
-        <!--</form>-->
+        <% if (obj._id != user.userID) {%>
+        <form method="post">
+            <input class="buttonSmall" type="submit" value="Send friend request">
+        </form>
+        <% }else{%>
+            <a href="/findMatches" class="button">Start looking</a>
+        <%}%>
     </div>
 </main>
 

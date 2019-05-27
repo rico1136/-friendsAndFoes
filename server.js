@@ -41,11 +41,19 @@ express()
     .post('/register', upload.single('profilePicture'), addUser)
     .get(`/:id`, profile)
     .get('/findMatches', findMatches)
+    .get('/profile', redProfile)
     .use(notFound)
     .listen(8000);
 
 function home(req, res) {
     res.render('pages/home.ejs', {title: 'Home'});
+}
+function redProfile(req,res) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    res.redirect(`/${req.session.user.userID}`)
 }
 function login(req, res) {
     res.render('pages/login.ejs', {title: 'Login'});
@@ -102,7 +110,7 @@ function profile(req, res, next) {
                 next();
                 return
             }
-            res.render('pages/profile.ejs', {title: `Profile of ${profile.name}`,obj : profile});
+            res.render('pages/profile.ejs', {title: `Profile of ${profile.name}`,obj : profile, user: req.session.user});
         }
     }
 
