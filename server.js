@@ -6,6 +6,10 @@ const multer = require('multer');
 const mongo = require('mongodb');
 const session = require('express-session');
 
+// Json api call
+const request = require("request");
+
+
 // initialize db
 require('dotenv').config();
 
@@ -156,3 +160,18 @@ function addUser(req, res, next) {
 function notFound(req, res) {
     res.status(404).render('not-found.ejs', {title: 'Not-Found'}) ;
 }
+
+
+const options = { method: 'POST',
+    url: 'https://api-v3.igdb.com/games',
+    headers:
+        { 'Postman-Token': '181a8b4d-3061-41d7-a6ba-105cb9bd5d07',
+            'cache-control': 'no-cache',
+            'user-key': 'fb8821b65e913424665c33e12d06ac9a' },
+    body: 'fields name,popularity; sort popularity desc;\n' };
+
+request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+
+    console.log(body);
+});

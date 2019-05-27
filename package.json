@@ -17,9 +17,11 @@
     "express": "^4.17.0",
     "express-session": "^1.16.1",
     "get-age": "^1.0.1",
+    "igdb-api-node": "^3.1.7",
     "mongodb": "^3.2.5",
     "multer": "^1.4.1",
     "npm": "^6.9.0",
+    "request": "^2.88.0",
     "slug": "^1.1.0"
   },
   "devDependencies": {
