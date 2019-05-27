@@ -1,6 +1,6 @@
 <% include ../head.ejs %>
 <main class="profile">
-    <div class="profilePicture" style="background-image: url('<%= obj.profile.profileImg%>')">
+    <div class="profilePicture" style="background-image: url('/upload/<%= obj.profile.profileImg%>')">
         <div class="profilePictureGradient"></div>
     </div>
     <div class="profileName">
@@ -25,10 +25,12 @@
         </div>
 
 
-        <!--if profile id is same as logged in id dont show-->
-        <form method="post">
-            <input class="buttonSmall" type="submit" value="Send friend request">
-        </form>
+        <!--if profile id is same as logged in.-->
+        <a href="/findMatches" class="button">Start looking</a>
+        <!--if profile id is not same as logged in-->
+        <!--<form method="post">-->
+            <!--<input class="buttonSmall" type="submit" value="Send friend request">-->
+        <!--</form>-->
     </div>
 </main>
 

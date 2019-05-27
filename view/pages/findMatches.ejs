@@ -2,9 +2,10 @@
 <main class="findMatches">
     <h1>Find your player 2</h1>
     <div>
-        <% users.forEach(function(user){ %>
-            <%- include('../profilePreview', {user: user}); %>
-        <%}); %>
+        <% profiles.forEach(function(profile){ %>
+            <% if (profile._id != user.userID) {%>
+            <%- include('../profilePreview', {user: profile}); %>
+        <%}}); %>
     </div>
 </main>
 

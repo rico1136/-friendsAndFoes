@@ -1,6 +1,6 @@
 <article class="person">
-  <a href="">
-    <img src="assets/images/profile.jpg" alt="Person image">
+  <a href="/<%= user._id%>">
+    <div style="background-image: url('/upload/<%= user.profile.profileImg %>')"></div>
     <div class="personContent">
       <h2><%= user.name%>, <%= user.age %></h2>
       <p>Favorite game: <%= user.profile.favoriteGames[0]%></p>

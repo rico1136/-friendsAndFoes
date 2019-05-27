@@ -9,11 +9,11 @@ const session = require('express-session');
 // initialize db
 require('dotenv').config();
 
-var db = null;
-var url = 'mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
+let db = null;
+let url = 'mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
 
 mongo.MongoClient.connect(url, function (err, client) {
-    if (err) throw err
+    if (err) throw err;
     db = client.db(process.env.DB_NAME)
 });
 
@@ -32,6 +32,7 @@ express()
     .set('views', 'view')
     .get('/', home)
     .get('/login', login)
+    .post('/login', tryLogin)
     .get('/register', register)
     .post('/register', upload.single('profilePicture'), addUser)
     .get(`/:id`, profile)
@@ -45,10 +46,32 @@ function home(req, res) {
 function login(req, res) {
     res.render('pages/login.ejs', {title: 'Login'});
 }
+function tryLogin(req, res) {
+    db.collection('profile').find().toArray(done);
+    function done(err, data, next){
+        if (err) {
+            next(err);
+        } else {
+            let profile = arrayFind(data, function (value) {
+                return value.email == req.body.email && value.password == req.body.password
+            });
+            if(!profile){
+                res.status(401).send('Password incorrect');
+                return;
+            }
+            req.session.user = {userID: profile._id};
+            res.redirect(`/${profile._id}`);
+        }
+    }
+}
 function register(req, res) {
     res.render('pages/register.ejs', {title: 'Register'});
 }
 function profile(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
     db.collection('profile').find().toArray(done)
 
     function done(err, data){
@@ -69,19 +92,40 @@ function profile(req, res, next) {
 
 
 }
-function findMatches(req, res) {
-    db.collection('profile').find().toArray(done)
+function findMatches(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    let bestMatch;
+    let mediumMatch;
+    let noMatch;
+    db.collection('profile').find().toArray(done);
     function done(err, data){
         if (err) {
-            next(err)
+            next(err);
         } else {
-            res.render('pages/findMatches.ejs', {title: `Find your matches`, users : data});
+            filterMatches(data);
+            res.render('pages/findMatches.ejs', {title: `Find your matches`,bestMatch : bestMatch, mediumMatch : mediumMatch, noMatch:noMatch, profiles : data, user: req.session.user});
         }
+    }
+
+    function filterMatches(data) {
+
     }
 }
 
 
-function addUser(req, res) {
+function addUser(req, res, next) {
+    db.collection('profile').find().toArray(getEmails);
+    function getEmails(err, data){
+        let emails = arrayFind(data, function (value) {
+            return value.email == req.body.email
+        });
+        if(emails){
+            res.status(401).send('Email already in use');
+            return
+        }
         db.collection('profile').insertOne({
             email: req.body.email,
             password: req.body.password,
@@ -95,12 +139,13 @@ function addUser(req, res) {
                 favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
             }
         }, done);
+    }
 
-
-    function done(err, data) {
+    function done(err, data, next) {
         if (err) {
-            next(err)
+            next(err);
         } else {
+            req.session.user = {userID: profile._id};
             res.redirect(`/${data.insertedId}`);
         }
     }
