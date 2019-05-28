@@ -1,6 +1,6 @@
 <% include ../head.ejs %>
 <main class="profile">
-    <div class="profilePicture" style="background-image: url('<%= obj.profile.profileImg%>')">
+    <div class="profilePicture" style="background-image: url('/upload/<%= obj.profile.profileImg%>')">
         <div class="profilePictureGradient"></div>
     </div>
     <div class="profileName">
@@ -18,17 +18,21 @@
         <div>
             <h2>Favorite games</h2>
             <ul>
-                <li><%= obj.profile.favoriteGames[0] %></li>
-                <li><%= obj.profile.favoriteGames[1] %></li>
-                <li><%= obj.profile.favoriteGames[2] %></li>
+                <li><%= obj.favoriteGenres[0] %></li>
+                <li><%= obj.favoriteGenres[1] %></li>
+                <li><%= obj.favoriteGenres[2] %></li>
             </ul>
         </div>
 
 
-        <!--if profile id is same as logged in id dont show-->
+        <!--if profile id is same as logged in.-->
+        <% if (obj._id != user.userID) {%>
         <form method="post">
             <input class="buttonSmall" type="submit" value="Send friend request">
         </form>
+        <% }else{%>
+            <a href="/findMatches" class="button">Start looking</a>
+        <%}%>
     </div>
 </main>
 

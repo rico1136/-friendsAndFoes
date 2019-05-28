@@ -1,101 +1,181 @@
 const express = require('express');
 const arrayFind = require('array-find');
-const slug = require('slug');
 const bodyParser = require('body-parser');
 const getAge = require('get-age');
 const multer = require('multer');
+const mongo = require('mongodb');
+const session = require('express-session');
+
+// Json api call
+const request = require("request");
+
+
+// initialize db
+require('dotenv').config();
+
+let db = null;
+let url = 'mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
+
+mongo.MongoClient.connect(url, function (err, client) {
+    if (err) throw err;
+    db = client.db(process.env.DB_NAME)
+});
+
 
 const upload = multer({dest: 'static/upload/'});
-
-let profiles = [
-    {
-        id: 1,
-        email: 'ricozethof@gmail.com',
-        password: '123',
-        name: 'Rico Zethof',
-        gender: 'male',
-        age: '16/09/2000',
-        profile: {
-            profileImg: '/assets/images/profile.jpg',
-            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas rutrum, ex ut eleifend porta, mauris mi faucibus quam, vel tristique ipsum nisi nec elit. Etiam sed commodo ipsum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer posuere tristique porttitor.',
-            wantGender: 'Female',
-            favoriteGames: ['Rocket league','Red dead Redemption','League of Legends'],
-        }
-    },
-    {
-        id: 2,
-        email: 'test@gmail.com',
-        password: '123',
-        name: '',
-        gender: '',
-        age: '',
-        profile: {
-            bio: '',
-            wantGender: '',
-            favoriteGames: ['','',''],
-        }
-    },
-];
 
 express()
     .use(express.static('static'))
     .use(bodyParser.urlencoded({extended:true}))
+    .use(session({
+        resave:false,
+        saveUninitialized:true,
+        secret: process.env.SESSION_SECRET
+    }))
     .set('view engine', 'ejs')
     .set('views', 'view')
     .get('/', home)
     .get('/login', login)
+    .post('/login', tryLogin)
     .get('/register', register)
     .post('/register', upload.single('profilePicture'), addUser)
     .get(`/:id`, profile)
     .get('/findMatches', findMatches)
+    .get('/profile', redProfile)
     .use(notFound)
     .listen(8000);
 
 function home(req, res) {
     res.render('pages/home.ejs', {title: 'Home'});
 }
+function redProfile(req,res) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    res.redirect(`/${req.session.user.userID}`)
+}
 function login(req, res) {
     res.render('pages/login.ejs', {title: 'Login'});
 }
-function register(req, res) {
-    res.render('pages/register.ejs', {title: 'Register'});
-}
-function createProfile(req, res) {
-    let id = (profiles.slice(-1));
-    id = id[0].id;
-}
-function addProfile(req, res) {
-    res.redirect('/profile');
-}
-function profile(req, res) {
-    let obj;
-    obj = profiles.find(obj => obj.id == req.params.id);
-    res.render('pages/profile.ejs', {title: `Profile of ${obj.name}`,obj : obj});
-}
-function findMatches(req, res) {
-    res.render('pages/findMatches.ejs', {title: `Find your matches`});
-}
-
-
-function addUser(req, res) {
-    let id = (profiles.slice(-1));
-    id = id[0].id + 1;
-
-    profiles.push({
-        id: id,
-        email: req.body.email,
-        password: req.body.password,
-        name: req.body.name,
-        gender: req.body.gender,
-        age: req.body.age,
-        profile: {
-            profileImg: req.file ? req.file.filename : null,
-            bio: req.body.bio,
-            wantGender: req.body.wantGender,
-            favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
+function tryLogin(req, res) {
+    db.collection('profile').find().toArray(done);
+    function done(err, data, next){
+        if (err) {
+            next(err);
+        } else {
+            let profile = arrayFind(data, function (value) {
+                return value.email == req.body.email && value.password == req.body.password
+            });
+            if(!profile){
+                res.status(401).send('Password incorrect');
+                return;
+            }
+            req.session.user = {userID: profile._id};
+            res.redirect(`/${profile._id}`);
         }
+    }
+}
+function register(req, res) {
+    const options = { method: 'POST',
+        url: 'https://api-v3.igdb.com/genres',
+        headers:
+            { 'Postman-Token': '181a8b4d-3061-41d7-a6ba-105cb9bd5d07',
+                'cache-control': 'no-cache',
+                'user-key': 'fb8821b65e913424665c33e12d06ac9a' },
+        body: 'fields name;limit 50;' };
+
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        let data = JSON.parse(body);
+        res.render('pages/register.ejs', {title: 'Register', options: data});
     });
-    res.redirect(`/${id}`);
+}
+function profile(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    db.collection('profile').find().toArray(done)
+
+    function done(err, data){
+        if (err) {
+            next(err)
+        } else {
+            let id = req.params.id;
+            let profile = arrayFind(data, function (value) {
+                return value._id == id
+            });
+            if(!profile){
+                next();
+                return
+            }
+            res.render('pages/profile.ejs', {title: `Profile of ${profile.name}`,obj : profile, user: req.session.user});
+        }
+    }
+
+
+}
+function findMatches(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    let bestMatch;
+    let mediumMatch;
+    let noMatch;
+    db.collection('profile').find().toArray(done);
+    function done(err, data){
+        if (err) {
+            next(err);
+        } else {
+            filterMatches(data);
+            res.render('pages/findMatches.ejs', {title: `Find your matches`,bestMatch : bestMatch, mediumMatch : mediumMatch, noMatch:noMatch, profiles : data, user: req.session.user});
+        }
+    }
+
+    function filterMatches(data) {
+
+    }
+}
+
+
+function addUser(req, res, next) {
+    db.collection('profile').find().toArray(getEmails);
+    function getEmails(err, data){
+        let emails = arrayFind(data, function (value) {
+            return value.email == req.body.email
+        });
+        if(emails){
+            res.status(401).send('Email already in use');
+            return
+        }
+        db.collection('profile').insertOne({
+            email: req.body.email,
+            password: req.body.password,
+            name: req.body.name,
+            gender: req.body.gender,
+            age: getAge(req.body.age),
+            favoriteGenres:[req.body.genre1, req.body.genre2, req.body.genre3],
+            profile: {
+                profileImg: req.file ? req.file.filename : null,
+                bio: req.body.bio,
+                wantGender: req.body.wantGender,
+                favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
+            }
+        }, done);
+    }
+
+    function done(err, data, next) {
+        if (err) {
+            next(err);
+        } else {
+            req.session.user = {userID: profile._id};
+            res.redirect(`/${data.insertedId}`);
+        }
+    }
+
+
 }
 
 function notFound(req, res) {
