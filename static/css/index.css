@@ -264,6 +264,34 @@ footer{
     bottom: 0;
     left: 0;
 }
+.footerHome{
+    margin: 0;
+    padding: 0;
+}
+.footerHome svg{
+    margin-bottom: -1em;
+}
+.footerHome__content{
+    height: 5em;
+    margin: 0;
+    padding: 0;
+    background-color: #7289da;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: #fafafa;
+}
+
+.footerHome p{
+    margin: auto;
+}
+
+.footerHome a{
+    background-color: #fafafa;
+    color: #43b581;
+    margin: auto;
+}
+
 .footerContent{
     margin-top: 13vh;
     display: none;

@@ -1,5 +1,6 @@
 const express = require('express');
 const arrayFind = require('array-find');
+const arrayFilter = require('array-filter');
 const bodyParser = require('body-parser');
 const getAge = require('get-age');
 const multer = require('multer');
@@ -121,20 +122,25 @@ function findMatches(req, res, next) {
         res.redirect('/login');
         return
     }
-    let bestMatch;
-    let mediumMatch;
-    let noMatch;
     db.collection('profile').find().toArray(done);
     function done(err, data){
         if (err) {
             next(err);
         } else {
-            filterMatches(data);
-            res.render('pages/findMatches.ejs', {title: `Find your matches`,bestMatch : bestMatch, mediumMatch : mediumMatch, noMatch:noMatch, profiles : data, user: req.session.user});
+            const matches = filterMatches(data);
+            res.render('pages/findMatches.ejs', {title: `Find your matches`, matches : matches, allUsers : data , user: req.session.user});
         }
     }
 
     function filterMatches(data) {
+        const user = arrayFind(data, function (value) {
+            return value._id == req.session.user.userID;
+        });
+
+        return arrayFilter(data, function (value) {
+            return user.profile.wantGender === value.gender && user.gender === value.profile.wantGender && (user.genre1 === value.genre1 || user.genre1 === value.genre2 || user.genre1 === value.genre3) || (user.genre2 === value.genre1 || user.genre2 === value.genre2 || user.genre2 === value.genre3) || (user.genre3 === value.genre1 || user.genre3 === value.genre2 || user.genre3 === value.genre3);
+        });
+
 
     }
 }
@@ -156,12 +162,13 @@ function addUser(req, res, next) {
             name: req.body.name,
             gender: req.body.gender,
             age: getAge(req.body.age),
-            favoriteGenres:[req.body.genre1, req.body.genre2, req.body.genre3],
+            genre1: req.body.genre1,
+            genre2: req.body.genre2,
+            genre3: req.body.genre3,
             profile: {
                 profileImg: req.file ? req.file.filename : null,
                 bio: req.body.bio,
                 wantGender: req.body.wantGender,
-                favoriteGames: [req.body.games1, req.body.games2, req.body.games3],
             }
         }, done);
     }
@@ -170,7 +177,7 @@ function addUser(req, res, next) {
         if (err) {
             next(err);
         } else {
-            req.session.user = {userID: profile._id};
+            req.session.user = {userID: data.insertedId};
             res.redirect(`/${data.insertedId}`);
         }
     }
