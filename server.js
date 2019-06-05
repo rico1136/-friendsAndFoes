@@ -44,7 +44,7 @@ express()
     .get('/findMatches', findMatches)
     .get('/profile', redProfile)
     .use(notFound)
-    .listen(8000);
+    .listen(9999);
 
 function home(req, res) {
     res.render('pages/home.ejs', {title: 'Home'});
@@ -128,7 +128,7 @@ function findMatches(req, res, next) {
             next(err);
         } else {
             const matches = filterMatches(data);
-            res.render('pages/findMatches.ejs', {title: `Find your matches`, matches : matches, allUsers : data , user: req.session.user});
+            res.render('pages/findMatches.ejs', {title: `Find your matches`, matches : matches, allUsers : data , currentUser: req.session.user});
         }
     }
 
@@ -138,7 +138,7 @@ function findMatches(req, res, next) {
         });
 
         return arrayFilter(data, function (value) {
-            return user.profile.wantGender === value.gender && user.gender === value.profile.wantGender && (user.genre1 === value.genre1 || user.genre1 === value.genre2 || user.genre1 === value.genre3) || (user.genre2 === value.genre1 || user.genre2 === value.genre2 || user.genre2 === value.genre3) || (user.genre3 === value.genre1 || user.genre3 === value.genre2 || user.genre3 === value.genre3);
+            return user.profile.wantGender === value.gender  && user.gender === value.profile.wantGender && (user.genre1 === value.genre1 || user.genre1 === value.genre2 || user.genre1 === value.genre3) || (user.genre2 === value.genre1 || user.genre2 === value.genre2 || user.genre2 === value.genre3) || (user.genre3 === value.genre1 || user.genre3 === value.genre2 || user.genre3 === value.genre3);
         });
 
 

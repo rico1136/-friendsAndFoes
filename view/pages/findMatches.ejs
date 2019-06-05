@@ -2,11 +2,11 @@
 <main class="findMatches">
     <h1>Find your player 2</h1>
     <div>
-        <%if (matches){%>
+        <%if (matches.length > 1){ %>
             <h2>Your matches</h2>
         <%
             matches.forEach(function (match) {
-                if (match._id != user.userID){%>
+                if (match._id != currentUser.userID){%>
                   <%-  include('../profilePreview', {user: match});%>
                 <% }})}
             else{
@@ -14,16 +14,9 @@
                 <h2>All the users</h2>
                 <%
                 allUsers.forEach(function (user) {
-                if (user._id != user.userID){%>
+                if (user._id != currentUser.userID){%>
                 <%-  include('../profilePreview', {user: user});%>
             <% }})} %>
-
-            <h2>All the users</h2>
-            <%
-            allUsers.forEach(function (user) {
-            if (user._id != user.userID){%>
-                <%-  include('../profilePreview', {user: user});%>
-<% }})%>
     </div>
 </main>
 
