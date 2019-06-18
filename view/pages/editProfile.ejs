@@ -1,0 +1,58 @@
+<% include ../head.ejs %>
+<% include ../header.ejs %>
+<main class="form">
+    <h1>Register an account</h1>
+    <form method="POST" class="register" enctype="multipart/form-data">
+        <label for="email">Email:</label>
+        <input class="input" type="email" id="email" name="email" placeholder="<%= user.email %>" required />
+
+        <label for="password">Password:</label>
+        <input class="input" type="password" id="password" name="password" placeholder="<%= user.password %>" required/>
+
+        <label for="name">Name:</label>
+        <input class="input" type="text" id="name" name="name" placeholder="<%= user.name %>" required/>
+
+        <label for="gender">Gender:</label>
+        <select class="input" id="gender" name="gender" required>
+            <option value="Gamer">Gamer (Other)</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+
+        <label for="age">Birth date:</label>
+        <input class="input" type="date" id="age" name="age" placeholder="<%= user.age %>" required/>
+
+        <label for="profilePicture">Profile picture:</label>
+        <input class="input" type="file" id="profilePicture" name="profilePicture" accept="image/*" placeholder="<%= user.profile.profileImg %>" required/>
+
+        <label for="bio">Bio:</label>
+        <textarea class="input" name="bio" id="bio" cols="30" rows="5" placeholder="<%= user.profile.bio %>" required></textarea>
+
+        <label for="wantGender">I am looking for a:</label>
+        <select class="input" id="wantGender" name="wantGender" required>
+            <option value="gamer">Gamer (Other)</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <label for="genre1">Favorite game genres</label>
+        <select class="input" id="genre1" name="genre1" required>
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.name %>"><%= element.name %></option>
+            <%}); %>
+        </select>
+        <select class="input" id="genre2" name="genre2" required>
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.name %>"><%= element.name %></option>
+            <%}); %>
+        </select>
+        <select class="input" id="genre3" name="genre3" required>
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.name %>"><%= element.name %></option>
+            <%}); %>
+        </select>
+        <input class="input button" type="submit" value="Register Your account">
+    </form>
+</main>
+<script src=/index.js></script>
+

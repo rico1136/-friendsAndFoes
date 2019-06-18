@@ -17,10 +17,10 @@ require('dotenv').config();
 let db = null;
 let url = 'mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
 
-mongo.MongoClient.connect(url, function (err, client) {
-    if (err) throw err;
-    db = client.db(process.env.DB_NAME)
-});
+// mongo.MongoClient.connect(url, function (err, client) {
+//     if (err) throw err;
+//     db = client.db(process.env.DB_NAME)
+// });
 
 
 const upload = multer({dest: 'static/upload/'});
@@ -31,7 +31,7 @@ express()
     .use(session({
         resave:false,
         saveUninitialized:true,
-        secret: process.env.SESSION_SECRET
+        secret: 'nope',
     }))
     .set('view engine', 'ejs')
     .set('views', 'view')
@@ -43,6 +43,10 @@ express()
     .get(`/:id`, profile)
     .get('/findMatches', findMatches)
     .get('/profile', redProfile)
+    .post('/delete', deleteProfile)
+    .post('/:id', edit)
+    .get('/editProfile', editProfile)
+    .post('/editProfile', updateProfile)
     .use(notFound)
     .listen(9999);
 
@@ -183,6 +187,60 @@ function addUser(req, res, next) {
     }
 
 
+}
+function deleteProfile (req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    try {
+        db.profile.deleteOne( { "_id" : req.session.user.userID } );
+        res.redirect('/');
+    } catch (e) {
+        print(e);
+    }
+
+}
+function edit(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    res.redirect('/editProfile');
+}
+function editProfile(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    let currentUser = db.profile.findOne({ "_id" : req.session.user.userID });
+    if (currentUser){
+        res.render('/editProfile', {user: currentUser});
+    }
+}
+function updateProfile(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    db.profile.updateOne(
+        { "_id" : req.session.user.userID },
+        { $set: {
+                email: req.body.email,
+                password: req.body.password,
+                name: req.body.name,
+                gender: req.body.gender,
+                age: getAge(req.body.age),
+                genre1: req.body.genre1,
+                genre2: req.body.genre2,
+                genre3: req.body.genre3,
+                profile: {
+                    profileImg: req.file ? req.file.filename : null,
+                    bio: req.body.bio,
+                    wantGender: req.body.wantGender,
+                }
+            } }
+    );
 }
 
 function notFound(req, res) {

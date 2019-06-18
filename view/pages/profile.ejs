@@ -5,6 +5,12 @@
     </div>
     <div class="profileName">
         <h1><%= obj.name %>, <%= obj.age %></h1>
+        <!--if profile id is same as logged in.-->
+        <% if (obj._id != user.userID) {%>
+        <form method="post" action="/delete">
+            <input class="buttonSmall" type="submit" value="Delete account">
+        </form>
+        <% }%>
     </div>
     <div class="profileContent">
         <div>
@@ -23,16 +29,6 @@
                 <li><%= obj.genre3 %></li>
             </ul>
         </div>
-
-
-        <!--if profile id is same as logged in.-->
-        <% if (obj._id != user.userID) {%>
-        <form method="post">
-            <input class="buttonSmall" type="submit" value="Send friend request">
-        </form>
-        <% }else{%>
-            <a href="/findMatches" class="button">Start looking</a>
-        <%}%>
     </div>
 </main>
 
