@@ -4,55 +4,54 @@
     <h1>Register an account</h1>
     <form method="POST" class="register" enctype="multipart/form-data">
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+        <input class="input" type="email" id="email" name="email" required />
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required/>
+        <input class="input" type="password" id="password" name="password" required/>
 
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required/>
+        <input class="input" type="text" id="name" name="name" required/>
 
         <label for="gender">Gender:</label>
-        <select id="gender" name="gender" required>
+        <select class="input" id="gender" name="gender" required>
             <option value="Gamer">Gamer (Other)</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select>
 
         <label for="age">Birth date:</label>
-        <input type="date" id="age" name="age" required/>
+        <input class="input" type="date" id="age" name="age" required/>
 
         <label for="profilePicture">Profile picture:</label>
-        <input type="file" id="profilePicture" name="profilePicture" accept="image/*" required/>
+        <input class="input" type="file" id="profilePicture" name="profilePicture" accept="image/*" required/>
 
         <label for="bio">Bio:</label>
-        <textarea name="bio" id="bio" cols="30" rows="5"></textarea>
+        <textarea class="input" name="bio" id="bio" cols="30" rows="5" required></textarea>
 
         <label for="wantGender">I am looking for a:</label>
-        <select id="wantGender" name="wantGender" required>
+        <select class="input" id="wantGender" name="wantGender" required>
             <option value="gamer">Gamer (Other)</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
         </select>
 
         <label for="genre1">Favorite game genres</label>
-        <select id="genre1" name="genre1" required>
+        <select class="input" id="genre1" name="genre1" required>
             <%  options.forEach(function(element) {%>
                 <option value="<%= element.name %>"><%= element.name %></option>
             <%}); %>
         </select>
-        <select id="genre2" name="genre2" required>
+        <select class="input" id="genre2" name="genre2" required>
             <%  options.forEach(function(element) {%>
                 <option value="<%= element.name %>"><%= element.name %></option>
             <%}); %>
         </select>
-        <select id="genre3" name="genre3" required>
+        <select class="input" id="genre3" name="genre3" required>
             <%  options.forEach(function(element) {%>
                 <option value="<%= element.name %>"><%= element.name %></option>
             <%}); %>
         </select>
-
-        <input class="button" type="submit" value="Register">
+        <input class="input button" type="submit" value="Register Your account">
     </form>
 </main>
 <script src=/index.js></script>
