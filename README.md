@@ -2,7 +2,7 @@
 
 A dating app for the ones seeking for a partner. For gamers it is hard to find someone who is equally into gaming cause they live inside most of the time. For them we developed this app.
 
-![Wireflow app](https://github.com/joanpadolina/Project_Tech/blob/master/documentatie/Jome-branding-sketch.png)
+![Wireframes](https://raw.githubusercontent.com/rico1136/-friendsAndFoes/master/Wiki/firstidea.PNG)
 
 ## Wiki
 
