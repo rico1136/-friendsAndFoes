@@ -40,7 +40,7 @@ profile: {
   bio: req.body.bio,
   wantGender: req.body.wantGender,
   }
-``
+```
 
 ## Installation
 
@@ -70,12 +70,8 @@ npm run dev
 - Register
 - Log-in
 - Session
-- Meme-category-form
-- Edit profile
-- Meme-Api
+- Game-Api
 - Matches based on category
-- Log-out
-- Delete profile
 
 ## Usage
 Start the application
@@ -90,4 +86,4 @@ npm run dev
 Make sure you pull the repository once in a while since we are still working on this project, you can do this by using ```git pull```
 
 # License
-[MIT](https://github.com/rico1136/Project_Tech/blob/master/LICENSE)
+[MIT](https://github.com/rico1136/-friendsandfoes/blob/master/LICENSE)
