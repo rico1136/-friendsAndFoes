@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint server.js",
-    "start": "nodemon server.js"
+    "dev": "nodemon server.js"
+    "start": "node server.js"
   },
   "author": "Rico Zethof",
   "license": "MIT",
