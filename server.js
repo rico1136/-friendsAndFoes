@@ -17,7 +17,7 @@ const request = require("request");
 require('dotenv').config();
 
 let db = null;
-let url = 'mongodb://' + process.env.DB_HOST + ':' + process.env.DB_PORT;
+let url = 'mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASSWORD+'@cluster0-l7jii.mongodb.net/test?retryWrites=true&w=majority';
 
 mongo.MongoClient.connect(url, function (err, client) {
     if (err) throw err;
