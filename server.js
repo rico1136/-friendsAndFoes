@@ -46,7 +46,7 @@ express()
     .get('/findMatches', findMatches)
     .get('/profile', redProfile)
     .use(notFound)
-    .listen(9999);
+    .listen(process.env.PORT || 8000);
 
 function home(req, res) {
     res.render('pages/home.ejs', {title: 'Home'});
