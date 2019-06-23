@@ -6,6 +6,8 @@ const getAge = require('get-age');
 const multer = require('multer');
 const mongo = require('mongodb');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 // Json api call
 const request = require("request");
@@ -66,14 +68,18 @@ function tryLogin(req, res) {
             next(err);
         } else {
             let profile = arrayFind(data, function (value) {
-                return value.email == req.body.email && value.password == req.body.password
+                return value.email == req.body.email
             });
             if(!profile){
                 res.status(401).send('Password incorrect');
                 return;
             }
-            req.session.user = {userID: profile._id};
-            res.redirect(`/${profile._id}`);
+            let salt = bcrypt.genSaltSync(saltRounds);
+            let hash = bcrypt.hashSync(req.body.password, salt);
+            if (bcrypt.compareSync(req.body.password, hash)){
+                req.session.user = {userID: profile._id};
+                res.redirect(`/${profile._id}`);
+            }
         }
     }
 }
@@ -156,21 +162,28 @@ function addUser(req, res, next) {
             res.status(401).send('Email already in use');
             return
         }
-        db.collection('profile').insertOne({
-            email: req.body.email,
-            password: req.body.password,
-            name: req.body.name,
-            gender: req.body.gender,
-            age: getAge(req.body.age),
-            genre1: req.body.genre1,
-            genre2: req.body.genre2,
-            genre3: req.body.genre3,
-            profile: {
-                profileImg: req.file ? req.file.filename : null,
-                bio: req.body.bio,
-                wantGender: req.body.wantGender,
-            }
-        }, done);
+        const myPlaintextPassword = req.body.password;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
+                // Store hash in your password DB.
+                db.collection('profile').insertOne({
+                    email: req.body.email,
+                    password: hash,
+                    name: req.body.name,
+                    gender: req.body.gender,
+                    age: getAge(req.body.age),
+                    genre1: req.body.genre1,
+                    genre2: req.body.genre2,
+                    genre3: req.body.genre3,
+                    profile: {
+                        profileImg: req.file ? req.file.filename : null,
+                        bio: req.body.bio,
+                        wantGender: req.body.wantGender,
+                    }
+                }, done);
+            });
+        });
+
     }
 
     function done(err, data, next) {
