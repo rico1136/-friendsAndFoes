@@ -279,6 +279,7 @@ function thanosMe(req, res) {
         if (err) {
             next(err);
         } else {
+            req.session.destroy();
             res.redirect(`/`);
         }
     }
