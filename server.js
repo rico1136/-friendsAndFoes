@@ -45,6 +45,10 @@ express()
     .get(`/:id`, profile)
     .get('/findMatches', findMatches)
     .get('/profile', redProfile)
+    .get('/remove', removeView)
+    .post('/remove', thanosMe)
+    .get('/edit', editProfile)
+    .post('/edit', edit)
     .use(notFound)
     .listen(process.env.PORT || 8000);
 
@@ -150,7 +154,61 @@ function findMatches(req, res, next) {
 
     }
 }
+function editProfile(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    const options = { method: 'POST',
+        url: 'https://api-v3.igdb.com/genres',
+        headers:
+            { 'Postman-Token': '181a8b4d-3061-41d7-a6ba-105cb9bd5d07',
+                'cache-control': 'no-cache',
+                'user-key': 'fb8821b65e913424665c33e12d06ac9a' },
+        body: 'fields name;limit 50;' };
 
+    request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+        let data = JSON.parse(body);
+        res.render('pages/edit.ejs', {title: 'Edit Profile', options: data});
+    });
+}
+
+function edit(req, res, next) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    const myPlaintextPassword = req.body.password;
+    let ObjectID = require('mongodb').ObjectID;
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
+                // Store hash in your password DB.
+                db.collection('profile').updateOne(
+                    {_id : ObjectID(req.session.user.userID)},
+                    {
+                        $set:{
+                            email: req.body.email,
+                            password: hash,
+                            name: req.body.name,
+                            genre1: req.body.genre1,
+                            genre2: req.body.genre2,
+                            genre3: req.body.genre3,
+                            profile: {
+                                bio: req.body.bio,
+                            }
+                        }}, done);
+            });
+        }
+    );
+    function done(err) {
+        if (err) {
+            next(err);
+        } else {
+            res.redirect(`/${req.session.user.userID}`);
+        }
+    }
+}
 
 function addUser(req, res, next) {
     db.collection('profile').find().toArray(getEmails);
@@ -198,6 +256,33 @@ function addUser(req, res, next) {
 
 }
 
+function removeView(req, res) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    res.render('pages/remove', {title: 'Remove'});
+}
+
+function thanosMe(req, res) {
+    if (!req.session.user) {
+        res.redirect('/login');
+        return
+    }
+    let ObjectID = require('mongodb').ObjectID;
+    db.collection('profile').deleteOne(
+        {
+            _id : ObjectID(req.session.user.userID)
+        },done
+    );
+    function done(err,next) {
+        if (err) {
+            next(err);
+        } else {
+            res.redirect(`/`);
+        }
+    }
+}
 function notFound(req, res) {
     res.status(404).render('not-found.ejs', {title: 'Not-Found'}) ;
 }

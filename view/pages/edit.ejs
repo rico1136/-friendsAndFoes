@@ -1,0 +1,39 @@
+<% include ../head.ejs %>
+<% include ../header.ejs %>
+<main class="form">
+    <h1>Register an account</h1>
+    <form method="POST" class="register" >
+        <label for="email">Email:</label>
+        <input class="input" type="email" id="email" name="email"  />
+
+        <label for="password">Password:</label>
+        <input class="input" type="password" id="password" name="password" />
+
+        <label for="name">Name:</label>
+        <input class="input" type="text" id="name" name="name" />
+
+        <label for="bio">Bio:</label>
+        <textarea class="input" name="bio" id="bio" cols="30" rows="5" ></textarea>
+
+        <label for="genre1">Favorite game genres</label>
+        <select class="input" id="genre1" name="genre1" >
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.name %>"><%= element.name %></option>
+            <%}); %>
+        </select>
+        <select class="input" id="genre2" name="genre2" >
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.name %>"><%= element.name %></option>
+            <%}); %>
+        </select>
+        <select class="input" id="genre3" name="genre3" >
+            <%  options.forEach(function(element) {%>
+                <option value="<%= element.name %>"><%= element.name %></option>
+            <%}); %>
+        </select>
+        <input class="input button" type="submit" value="Register Your account">
+    </form>
+    <a href="/remove" class="buttonSmall" >Remove</a>
+</main>
+<script src=/index.js></script>
+
