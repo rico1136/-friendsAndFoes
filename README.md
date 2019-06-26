@@ -21,8 +21,7 @@ Follow the progress on the [wiki](https://github.com/rico1136/-friendsAndFoes/wi
 * NPM
 * EJS
 * Express
-
-* Use npm install to install all the packages at once
+* .ENV
 
 ## Database model
 
@@ -62,16 +61,19 @@ SESSION_SECRET= -secure session cookies-
 ```
 Run the application
 ```
-npm run dev
+npm run start
 ```
 
 
 ## Our features
 - Register
 - Log-in
+- Edit profile
+- Delete
 - Session
 - Game-Api
 - Matches based on category
+- External database
 
 ## Usage
 Start the application
